@@ -6,6 +6,7 @@ function Register() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -18,7 +19,7 @@ function Register() {
       setSuccess(res.data.message);
       setTimeout(() => navigate('/login'), 2500);
     } catch (err) {
-      setError(err.response?.data?.message || 'Ошибка при регистрации');
+      setError(err.response?.data?.message || 'Registration failed');
     }
   };
 
@@ -37,7 +38,6 @@ function Register() {
 
             <form onSubmit={handleSubmit}>
               
-
               <div className="mb-3">
                 <label className="text-muted small mb-1">Name</label>
                 <div className="input-group">
@@ -54,7 +54,6 @@ function Register() {
                 </div>
               </div>
 
-              {/* Поле Email */}
               <div className="mb-3">
                 <label className="text-muted small mb-1">E-mail</label>
                 <div className="input-group">
@@ -71,7 +70,6 @@ function Register() {
                 </div>
               </div>
 
-
               <div className="mb-4">
                 <label className="text-muted small mb-1">Password</label>
                 <div className="input-group">
@@ -79,13 +77,19 @@ function Register() {
                     <i className="bi bi-lock text-primary"></i>
                   </span>
                   <input 
-                    type="password" 
-                    className="form-control border-start-0" 
+                    type={showPassword ? 'text' : 'password'} 
+                    className="form-control border-start-0 border-end-0" 
                     placeholder="********"
                     required
                     onChange={e => setFormData({...formData, password: e.target.value})}
                   />
-                  <span className="input-group-text bg-white"><i className="bi bi-eye"></i></span>
+                  <span 
+                    className="input-group-text bg-white" 
+                    style={{ cursor: 'pointer' }} 
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                  </span>
                 </div>
               </div>
 
@@ -100,7 +104,6 @@ function Register() {
           </div>
         </div>
 
-       
         <div className="col-lg-7 d-none d-lg-block">
           <div 
             className="h-100" 

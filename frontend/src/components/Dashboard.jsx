@@ -15,9 +15,21 @@ function Dashboard() {
   useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
   const handleAction = async (path) => {
-    await api.post(`/users/${path}`, { userIds: selectedIds });
-    setSelectedIds([]);
-    fetchUsers();
+    try {
+      await api.post(`/users/${path}`, { userIds: selectedIds });
+      setSelectedIds([]);
+      fetchUsers();
+    } catch (err) { console.error(err); }
+  };
+
+  const isAllSelected = users.length > 0 && selectedIds.length === users.length;
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(users.map(user => user.id));
+    } else {
+      setSelectedIds([]);
+    }
   };
 
   return (
@@ -48,7 +60,14 @@ function Dashboard() {
           <table className="table table-hover mb-0">
             <thead className="bg-light text-muted small">
               <tr>
-                <th className="px-4"><input type="checkbox" className="form-check-input" /></th>
+                <th className="px-4">
+                  <input 
+                    type="checkbox" 
+                    className="form-check-input" 
+                    checked={isAllSelected}
+                    onChange={handleSelectAll}
+                  />
+                </th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Status</th>
@@ -76,11 +95,11 @@ function Dashboard() {
                   <td className="text-muted">{user.email}</td>
                   <td>
                     <span className={`badge rounded-pill px-3 ${user.status === 'active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'}`}>
-                      {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                      {user.status ? user.status.charAt(0).toUpperCase() + user.status.slice(1) : ''}
                     </span>
                   </td>
                   <td>
-                    <div className="small text-muted">{new Date(user.last_login_time).toLocaleString()}</div>
+                    <div className="small text-muted">{user.last_login_time ? new Date(user.last_login_time).toLocaleString() : 'N/A'}</div>
                     <div className="mt-1" style={{ width: '60px', height: '10px', background: '#e2e8f0', borderRadius: '2px' }}>
                       <div style={{ width: '40%', height: '100%', background: '#0d6efd', borderRadius: '2px' }}></div>
                     </div>
@@ -96,4 +115,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-

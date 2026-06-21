@@ -1,10 +1,11 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api';
 
 function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -49,12 +50,18 @@ function Login() {
                 <div className="input-group">
                   <span className="input-group-text bg-white border-end-0"><i className="bi bi-lock text-primary"></i></span>
                   <input 
-                    type="password" 
-                    className="form-control border-start-0" 
+                    type={showPassword ? 'text' : 'password'} 
+                    className="form-control border-start-0 border-end-0" 
                     placeholder="********"
                     onChange={e => setFormData({...formData, password: e.target.value})}
                   />
-                  <span className="input-group-text bg-white"><i className="bi bi-eye"></i></span>
+                  <span 
+                    className="input-group-text bg-white" 
+                    style={{ cursor: 'pointer' }} 
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                  </span>
                 </div>
               </div>
 
@@ -63,7 +70,14 @@ function Login() {
                   <input type="checkbox" className="form-check-input" id="remember" />
                   <label className="form-check-label small" htmlFor="remember">Remember me</label>
                 </div>
-                <Link to="/forgot" className="small text-decoration-none">Forgot password?</Link>
+                <button 
+                  type="button" 
+                  onClick={() => alert('Password reset features coming soon!')} 
+                  className="btn btn-link p-0 small text-decoration-none border-0 bg-transparent text-primary"
+                  style={{ fontSize: '0.875rem' }}
+                >
+                  Forgot password?
+                </button>
               </div>
 
               <button type="submit" className="btn btn-primary w-100 py-2 fw-bold mb-4">Sign In</button>
@@ -91,7 +105,3 @@ function Login() {
 }
 
 export default Login;
-
-
-
-
